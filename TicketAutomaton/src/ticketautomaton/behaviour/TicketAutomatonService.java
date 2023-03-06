@@ -24,7 +24,7 @@ public class TicketAutomatonService {
 
 	public void run() {
 
-		disableConsoleForProjectTest();
+//		disableConsoleForProjectTest();
 //		 BundleContext context = FrameworkUtil.getBundle(TicketAutomatonService.class).getBundleContext();
 //		 Bundle[] bundles = context.getBundles();
 //		 System.out.println(bundles.length);

@@ -6,7 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleException;
+import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
@@ -50,9 +53,32 @@ public class RouteSystemService {
 		componentServiceBus.registerEventHandler(nameEventHandler, eventHandler);
 
 	}
+	
+	private void disableConsoleForProjectTest() {
+		System.out.println("DISABLE");
+		Bundle[] bun = context.getBundles();
+		long felixGogoShellBundleID = -1;
+		
+		for(int i = 0; i < bun.length; i++) {
+			System.out.println(bun[i]);
+			if(bun[i].getSymbolicName().equals("org.apache.felix.gogo.shell")) {
+				felixGogoShellBundleID = bun[i].getBundleId();
+			}
+		}
+		if(felixGogoShellBundleID > 0) {
+			Bundle felixGogoShell = context.getBundle(felixGogoShellBundleID);
+			try {
+				felixGogoShell.stop();
+			} catch (BundleException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 
 	// Creates a Route
 	private void runRouteSystemService() {
+//		disableConsoleForProjectTest(); 
 		InputValidator iv = new InputValidator();
 		HashMap<Integer, Locations> locations = new HashMap<Integer, Locations>();
 		for (int i = 0; i < Locations.values().length; i++) {
@@ -68,8 +94,6 @@ public class RouteSystemService {
 
 //		Locations startLocation = locations.get(iv.getSingleNumber(locations.size()));
 		Locations startLocation = locations.get(1); //! ZUM TESTEN 
-		System.out.println("START LOCATION: " + startLocation);
-		System.out.println("Following end locations are available");
 
 		List<Routes> availableRoutes = new ArrayList<>();
 
@@ -129,12 +153,13 @@ public class RouteSystemService {
 
 		ServiceReference<EventAdmin> serviceRef = context.getServiceReference(EventAdmin.class);
 		ComponentServiceBus csb = (ComponentServiceBus) context.getService(serviceRef);
-		System.out.println(serviceRef.getBundle().getSymbolicName());
 
-		Map<String, Route> eventData = new HashMap<String, Route>();
-		eventData.put("Route", route);
+		Map<String, String> eventData = new HashMap<String, String>();
+		eventData.put("route", route.getRoute().toString());
+		eventData.put("distance", String.valueOf(route.getDistance()));
 		csb.sendEvent(new Event("RouteCreated", eventData));
         
 	}
+
 
 }
