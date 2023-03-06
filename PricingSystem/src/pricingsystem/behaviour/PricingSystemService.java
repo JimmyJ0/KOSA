@@ -1,6 +1,8 @@
 package pricingsystem.behaviour;
 
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
@@ -37,8 +39,33 @@ public class PricingSystemService {
 		componentServiceBus.registerEventHandler(nameEventHandler, eventHandler);
 
 	}
+	
+	private void disableConsoleForProjectTest() {
+		Bundle[] bun = context.getBundles();
+		long felixGogoShellBundleID = -1;
+		
+		for(int i = 0; i < bun.length; i++) {
+			if(bun[i].getSymbolicName().equals("org.apache.felix.gogo.shell")) {
+				felixGogoShellBundleID = bun[i].getBundleId();
+				break;
+			}
+		}
+		if(felixGogoShellBundleID > 0) {
+			Bundle felixGogoShell = context.getBundle(felixGogoShellBundleID);
+			try {
+				felixGogoShell.stop();
+			} catch (BundleException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	
+	
 
 	private void runPricingSystem(Event event) {
+		
+//		disableConsoleForProjectTest();
 		System.out.println("\n\n");
 		System.out.println("TOPIC: " + event.getTopic());
 		System.out.println("ROUTE: " + event.getProperty("route"));
@@ -48,6 +75,9 @@ public class PricingSystemService {
 
 	}
 
+	
+	
+	
 	// Ignore
 	private void fireEvent() {
 
