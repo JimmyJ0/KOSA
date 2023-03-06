@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: TicketAutomaton
+Bundle-SymbolicName: TicketAutomaton
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: ticketautomaton.Activator
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Automatic-Module-Name: TicketAutomaton
+Import-Package: org.osgi.framework;version="1.3.0",
+ org.osgi.service.event;version="1.4.1",
+ org.osgi.util.tracker;version="1.5.3"
+Bundle-ActivationPolicy: lazy
