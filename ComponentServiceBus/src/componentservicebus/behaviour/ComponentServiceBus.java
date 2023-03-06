@@ -1,7 +1,7 @@
 package componentservicebus.behaviour;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.osgi.service.event.Event;
@@ -11,15 +11,11 @@ import org.osgi.service.event.EventHandler;
 public class ComponentServiceBus implements EventAdmin, IComponentServiceBus {
 	private static final Logger LOG = Logger.getLogger(ComponentServiceBus.class.getName());
 
-	private List<EventHandler> eventHandlers = new ArrayList<>();
+	private Map<String, EventHandler> eventHandlers = new HashMap<>();
 	
-	public ComponentServiceBus() {
-		LOG.info("SERVICE: ComponentService gestartet!");
-
-	}
 	@Override
-	public void registerEventHandler(EventHandler eventHandler) {
-		eventHandlers.add(eventHandler);
+	public void registerEventHandler(String nameEventHandler, EventHandler eventHandler) {
+		eventHandlers.put(nameEventHandler,eventHandler);
 		
 	}
 	
@@ -33,14 +29,24 @@ public class ComponentServiceBus implements EventAdmin, IComponentServiceBus {
 	// Synchron: Platziert Event in der Event-Pipe und wartet darauf, dass Event verarbeitet wurde
 	@Override
 	public void sendEvent(Event event) {
-		System.out.println("2. Bus empfängt Event");
-//		System.out.println(event.containsProperty("Listener"));
-//		System.out.println(event.getTopic());
+		String eventType = event.getTopic();
+		EventHandler eventHandler = null;
+		switch(eventType) {
+		case "TicketAutomatonStarted": {
+			eventHandler = eventHandlers.get("routeSystem");
+			eventHandler.handleEvent(event);
+			break;
+		}
+		case "RouteCreated" : {
+			System.out.println("Route Created Event KOMMT AN");
+			break;
+		}
+		}
 		
-		eventHandlers.forEach(x -> System.out.println(x.toString()));
-        for (EventHandler eventHandler : eventHandlers) {
-            eventHandler.handleEvent(event);
-        }
+//		eventHandlers.values().forEach(x -> System.out.println(x.toString()));
+//        for (EventHandler eventHandler : eventHandlers.values()) {
+//            eventHandler.handleEvent(event);
+//        }
 		
 	}
 

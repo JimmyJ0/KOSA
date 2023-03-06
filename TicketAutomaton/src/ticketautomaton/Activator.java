@@ -16,7 +16,6 @@ public class Activator implements BundleActivator {
 
 	private static BundleContext context;
 	private ServiceTracker<EventAdmin, EventAdmin> serviceTracker;
-	ServiceRegistration<TicketAutomatonService> registration;
 
 	static BundleContext getContext() {
 		return context;
@@ -40,9 +39,10 @@ public class Activator implements BundleActivator {
 			// Wenn Service-Bus gestartet, registriere TicketAutomatonService
 			LOG.info("Component Service Bus verfügbar");
 			TicketAutomatonService ticketAutomatonService = new TicketAutomatonService(bundleContext);
-			registration = bundleContext.registerService(TicketAutomatonService.class, ticketAutomatonService, null);
+			bundleContext.registerService(TicketAutomatonService.class, ticketAutomatonService, null);
 
 		}).start();
+//		serviceTracker.close();
 
 	}
 
@@ -50,4 +50,5 @@ public class Activator implements BundleActivator {
 		Activator.context = null;
 	}
 
+	
 }
