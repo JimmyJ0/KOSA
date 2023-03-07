@@ -14,6 +14,7 @@ public class Activator implements BundleActivator {
 	}
 
 	public void start(BundleContext bundleContext) throws Exception {
+		System.out.println("STARTE BUNDLE PRICING ");
 		PricingSystemService pricingSystemService = new PricingSystemService(bundleContext);
 		bundleContext.registerService(PricingSystemService.class, pricingSystemService, null);
 		

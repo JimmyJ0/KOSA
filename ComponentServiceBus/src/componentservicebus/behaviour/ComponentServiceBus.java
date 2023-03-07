@@ -31,15 +31,15 @@ public class ComponentServiceBus implements EventAdmin, IComponentServiceBus {
 	@Override
 	public void sendEvent(Event event) {
 		String eventType = event.getTopic();
-		EventHandler eventHandler = null;
+//		EventHandler eventHandler = null;
 		switch (eventType) {
 		case "TicketAutomatonStarted": {
-			eventHandler = eventHandlers.get("routeSystem");
+			EventHandler eventHandler = eventHandlers.get("routeSystem");
 			eventHandler.handleEvent(event);
 			break;
 		}
 		case "RouteCreated": {
-			eventHandler = eventHandlers.get("pricingSystem");
+			EventHandler eventHandler = eventHandlers.get("pricingSystem");
 			eventHandler.handleEvent(event);
 			break;
 		}
